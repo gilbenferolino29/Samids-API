@@ -1,3 +1,7 @@
+global using Microsoft.EntityFrameworkCore;
+using Samids_API.Data;
+using Samids_API.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,6 +11,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<SamidsDataContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
