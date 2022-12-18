@@ -11,5 +11,7 @@ namespace Samids_API.Models
         [JsonIgnore]
         public ICollection<Student>? Students { get; set; }
         public ICollection<Faculty>? Faculties { get; set; }
+
+        public ICollection<SubjectSchedule> SubjectSchedules { get; set; }
     }
 }

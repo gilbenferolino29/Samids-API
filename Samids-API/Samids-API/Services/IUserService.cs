@@ -4,6 +4,10 @@ namespace Samids_API.Services
 {
     public interface IUserService
     {
-        User? Register(User newUser);
+        Task<User?> Register(User newUser);
+        Task<IEnumerable<User>> GetAll();
+        Task<User?> GetById(int id);
+        Task<User?> UpdateUser(User newUser);
+        Task<User?> DeleteUser(int id);
     }
 }

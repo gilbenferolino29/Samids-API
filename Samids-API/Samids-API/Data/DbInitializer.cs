@@ -25,6 +25,11 @@ namespace Samids_API.Data
             var Test = new Subject { SubjectName = "Test", SubjectDescription = "Test Subject" };
             var Test2 = new Subject { SubjectName = "Test2", SubjectDescription = "Test Subject 2" };
 
+            //SubjectSchedule init
+            var sched1 = new SubjectSchedule() { Day = Day.Monday, Subject = IAS, Room = "BCL1", TimeStart = new TimeOnly(10, 30), TimeEnd = new TimeOnly(11, 30) };
+            var sched2 = new SubjectSchedule() { Day = Day.Wednesday, Subject = IAS, Room = "BCL1", TimeStart = new TimeOnly(10, 30), TimeEnd = new TimeOnly(11, 30) };
+            var sched3 = new SubjectSchedule() { Day = Day.Friday, Subject = IAS, Room = "BCL1", TimeStart = new TimeOnly(10, 30), TimeEnd = new TimeOnly(11, 30) };
+
             //Students init
             var Joshua = new Student { FirstName = "Joshua", LastName = "Montero", StudentID = 2019020654, Course = "BSCS", Rfid = 187255239165, Subjects = new List<Subject> { IAS,Test}, Year = Year.Fourth };
             var Martin = new Student { FirstName = "Martin", LastName = "Lapetaje", StudentID = 2019022233, Course = "BSCS", Rfid = 1341296684,  Subjects = new List<Subject> { IAS,Test2},Year = Year.Fourth };
@@ -39,17 +44,23 @@ namespace Samids_API.Data
 
             //Config init
             var config = new Config();
+
             //Faculty init
             var Leeroy = new Faculty { FirstName = "John Leeroy", LastName = "Gadiane", Subjects = new List<Subject> { PL} };
             var Marissa = new Faculty { FirstName = "Marissa", LastName = "Buctuanon", Subjects = new List<Subject> { Test2} };
             var Dan = new Faculty { FirstName = "Daniel", LastName = "Seldura", Subjects = new List<Subject> { Test, IAS } };
-                
 
 
+            var Faculties = new Faculty[]
+            {
+                Leeroy, Marissa, Dan
+            };
 
+            //Init users
+            var TestUser = new User { FirstName = "Test", LastName = "User", Email = "test@test.com", Password = "test123456", SchoolYear = "2022-2023", Student = James, Type = Models.Type.Student, Deleted = 0 };
         }
             
 
-        }
     }
 }
+
