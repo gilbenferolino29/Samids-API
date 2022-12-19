@@ -70,8 +70,6 @@ namespace Samids_API.Services
            
             var faculty = await _context.Faculties.FindAsync(facultyId);
             var facSub = await _context.Faculties.Where(f => f.FacultyId == facultyId).SelectMany(s => s.Subjects).ToListAsync();
-            var ssSub = from subject in facSub join ss in _context.Set<SubjectSchedule>() on subject.SubjectID equals ss.Subject!.SubjectID select new { ss };
-            var query = from id in ssSub join atd in _context.Set<Attendance>() on id.ss.SchedId equals atd.SubjectSchedule.SchedId select atd;
             
             if  (faculty is null)
             {
@@ -83,6 +81,8 @@ namespace Samids_API.Services
                 throw new InvalidOperationException("Faculty may not have access or not assigned to any subject");
             }
 
+            var ssSub = from subject in facSub join ss in _context.Set<SubjectSchedule>() on subject.SubjectID equals ss.Subject!.SubjectID select new { ss };
+            var query = from id in ssSub join atd in _context.Set<Attendance>() on id.ss.SchedId equals atd.SubjectSchedule.SchedId select atd;
             return query;
         }
 
