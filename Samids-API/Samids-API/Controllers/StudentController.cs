@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Samids_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route(" ")]
     [ApiController]
     public class StudentController : ControllerBase
     {

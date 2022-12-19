@@ -11,10 +11,10 @@ namespace Samids_API.Models
         public Device? Device { get; set; }
         [Column(TypeName = "Date")]
         public DateTime? Date { get; set; }
-        [Column(TypeName = "Time")]
-        public TimeOnly? ActualTimeIn { get; set; }
-        [Column(TypeName = "Time")]
-        public TimeOnly? ActualTimeOut { get; set; }
+        
+        public DateTime? ActualTimeIn { get; set; }
+
+        public DateTime? ActualTimeOut { get; set; }
         
         public Remarks remarks { get; set; }
     }

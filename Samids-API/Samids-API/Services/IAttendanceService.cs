@@ -6,14 +6,14 @@ namespace Samids_API.Services
     {
         Task<IEnumerable<Attendance>> GetAttendances();
 
-        //Get All Attendance of Students for Faculty per Subject
-        Task<IEnumerable<Attendance>> GetStudFacAttendance(int subjectId, int facultyId);
+        //Get All Attendance of Students for Faculty (only assigned subject)
+        Task<IEnumerable<Attendance>> GetStudFacAttendance( int facultyId);
 
         //Verifies Student Attendance if it aligns with Subject - Room - Schedule
         Task<bool> VerifyAttendance(long rfid, string room);
 
         //Get All Attendance of Students per Subject
-        Task<IEnumerable<Attendance>> GetStudentAttendance(int subjectId, int studentId);
+        Task<IEnumerable<Attendance>> GetStudentAttendance( int studentId);
 
         //After Verification add attendance
         Task<Attendance> AddStudentAttendance(Attendance attendance);

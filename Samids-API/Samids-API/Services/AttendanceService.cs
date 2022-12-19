@@ -1,5 +1,6 @@
 ﻿using Samids_API.Data;
 using Samids_API.Models;
+using System.Linq;
 
 namespace Samids_API.Services
 {
@@ -27,33 +28,35 @@ namespace Samids_API.Services
             return await _context.Attendances.AsNoTracking().ToListAsync();
         }
 
-        public async Task<IEnumerable<Attendance>> GetStudentAttendance(int subjectId, int studentId)
+        public async Task<IEnumerable<Attendance>> GetStudentAttendance(int studentId)
         {
-            var subject = await _context.Subjects.FindAsync(subjectId);
+            
             var student = await _context.Students.FindAsync(studentId);
 
-            if(subject is null && student is null)
+            if( student is null)
             {
-                throw new InvalidOperationException("Subject or Student does not exist!");
+                throw new InvalidOperationException("Student does not exist!");
             }
-            return  await _context.Attendances.Where(a => a.SubjectSchedule.Subject.SubjectID == subjectId && a.Student.StudentID == studentId).AsNoTracking().ToListAsync();
+            return  await _context.Attendances.Where(a =>  a.Student.StudentID == studentId).AsNoTracking().ToListAsync();
         }
 
-        public async Task<IEnumerable<Attendance>> GetStudFacAttendance(int subjectId, int facultyId)
+        //Get All Attendance of Students for Faculty (only assigned subject)
+        public async Task<IEnumerable<Attendance>> GetStudFacAttendance(int facultyId)
         {
-            var subject = await _context.Subjects.FindAsync(subjectId);
+           
             var faculty = await _context.Faculties.FindAsync(facultyId);
-
-            var query = await _context.Attendances.Where(a => a.SubjectSchedule.Subject.SubjectID == subjectId && a.SubjectSchedule.Subject.Faculties.Where(f => f.FacultyId == facultyId) != null).AsNoTracking().ToListAsync();
-
-            if (subject is null && faculty is null)
+            var facSub = await _context.Faculties.Where(f => f.FacultyId == facultyId).SelectMany(s => s.Subjects).ToListAsync();
+            var ssSub = from subject in facSub join ss in _context.Set<SubjectSchedule>() on subject.SubjectID equals ss.Subject!.SubjectID select new { ss };
+            var query = from id in ssSub join atd in _context.Set<Attendance>() on id.ss.SchedId equals atd.SubjectSchedule.SchedId select atd;
+            
+            if  (faculty is null)
             {
-                throw new InvalidOperationException("Subject or Faculty does not exist!");
+                throw new InvalidOperationException("Faculty does not exist!");
             }
 
-            if(query is null)
+            if(facSub is null)
             {
-                throw new InvalidOperationException("Faculty may not have access or not assigned to this subject");
+                throw new InvalidOperationException("Faculty may not have access or not assigned to any subject");
             }
 
             return query;
@@ -63,7 +66,7 @@ namespace Samids_API.Services
         {
 
             //Verify if student exists in the database - Query
-            var queryStud = await _context.Students.AsNoTracking().SingleOrDefaultAsync(s => s.Rfid == rfid);
+            var queryStud = await _context.Students.Include(s=>s.Subjects).AsNoTracking().SingleOrDefaultAsync(s => s.Rfid == rfid);
             //Verify if room is assigned to a schedule - Query
             var queryS = await _context.SubjectSchedules.Where(s=>s.Room == room).AsNoTracking().ToListAsync();
 

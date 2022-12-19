@@ -9,11 +9,9 @@ namespace Samids_API.Models
         [Key]
         public int SchedId { get; set; }
         [JsonIgnore]
-        public Subject? Subject { get; set; }
-        [Column(TypeName = "Time")]
-        public TimeOnly TimeStart { get; set; }
-        [Column(TypeName = "Time")]
-        public TimeOnly TimeEnd { get; set; }
+        public Subject? Subject { get; set; }    
+        public DateTime TimeStart { get; set; }
+        public DateTime TimeEnd { get; set; }
         public Day Day { get; set; }
         public string Room { get; set; } = string.Empty;
 

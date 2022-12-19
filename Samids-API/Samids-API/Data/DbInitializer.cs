@@ -26,9 +26,9 @@ namespace Samids_API.Data
             var Test2 = new Subject { SubjectName = "Test2", SubjectDescription = "Test Subject 2" };
 
             //SubjectSchedule init
-            var sched1 = new SubjectSchedule() { Day = Day.Monday, Subject = IAS, Room = "BCL1", TimeStart = new TimeOnly(10, 30), TimeEnd = new TimeOnly(11, 30) };
-            var sched2 = new SubjectSchedule() { Day = Day.Wednesday, Subject = IAS, Room = "BCL1", TimeStart = new TimeOnly(10, 30), TimeEnd = new TimeOnly(11, 30) };
-            var sched3 = new SubjectSchedule() { Day = Day.Friday, Subject = IAS, Room = "BCL1", TimeStart = new TimeOnly(10, 30), TimeEnd = new TimeOnly(11, 30) };
+            var sched1 = new SubjectSchedule() { Day = Day.Monday, Subject = IAS, Room = "BCL1", TimeStart = new DateTime(0,0,0,10, 30,0), TimeEnd = new DateTime(0, 0, 0, 11, 30, 0) };
+            var sched2 = new SubjectSchedule() { Day = Day.Wednesday, Subject = IAS, Room = "BCL1", TimeStart = new DateTime(0, 0, 0, 10, 30, 0), TimeEnd = new DateTime(0, 0, 0, 11, 30, 0) };
+            var sched3 = new SubjectSchedule() { Day = Day.Friday, Subject = IAS, Room = "BCL1", TimeStart = new DateTime(0, 0, 0, 10, 30, 0), TimeEnd = new DateTime(0, 0, 0, 11, 30, 0) };
 
             //Students init
             var Joshua = new Student { FirstName = "Joshua", LastName = "Montero", StudentID = 2019020654, Course = "BSCS", Rfid = 187255239165, Subjects = new List<Subject> { IAS,Test}, Year = Year.Fourth };

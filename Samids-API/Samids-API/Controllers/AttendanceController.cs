@@ -17,19 +17,28 @@ namespace Samids_API.Controllers
         }
 
         [HttpGet]
+        [Route("GetAll")]
         public async Task<ActionResult<IEnumerable<Attendance>>> GetAll () {
             return Ok(await _attendanceService.GetAttendances());
 
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Attendance>>> GetAllSA(int subjectId, int studentId)
+        [Route("GetAllSA")]
+        public async Task<ActionResult<IEnumerable<Attendance>>> GetAllSA(int studentId)
         {
-            return Ok(await _attendanceService.GetStudentAttendance(subjectId, studentId));
+            return Ok(await _attendanceService.GetStudentAttendance( studentId));
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Attendance>>> GetAllFA(int subjectId, int facultyId)
+        [Route("GetAllFA")]
+        public async Task<ActionResult<IEnumerable<Attendance>>> GetAllFA(int facultyId)
         {
-            return Ok(await _attendanceService.GetStudFacAttendance(subjectId, facultyId));
+            return Ok(await _attendanceService.GetStudFacAttendance( facultyId));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Attendance>> AddAttendance(Attendance attendance)
+        {
+            return Ok(await _attendanceService.AddStudentAttendance(attendance));
         }
     }
 }
