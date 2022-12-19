@@ -1,4 +1,5 @@
-﻿using Samids_API.Models;
+﻿using Samids_API.Dto;
+using Samids_API.Models;
 
 namespace Samids_API.Services
 {
@@ -16,7 +17,9 @@ namespace Samids_API.Services
         Task<IEnumerable<Attendance>> GetStudentAttendance( int studentId);
 
         //After Verification add attendance
-        Task<Attendance> AddStudentAttendance(Attendance attendance);
+        Task<Attendance> AddStudentAttendance(AddAttendanceDto attendance);
+
+        Task<Remarks> CheckRemarks(DateTime time, SubjectSchedule sched);
 
 
     }

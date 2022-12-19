@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Samids_API.Dto;
 using Samids_API.Models;
 using Samids_API.Services;
 
@@ -36,7 +37,7 @@ namespace Samids_API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Attendance>> AddAttendance(Attendance attendance)
+        public async Task<ActionResult<Attendance>> AddAttendance(AddAttendanceDto attendance)
         {
             return Ok(await _attendanceService.AddStudentAttendance(attendance));
         }

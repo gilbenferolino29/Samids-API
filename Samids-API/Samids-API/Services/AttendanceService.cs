@@ -1,4 +1,5 @@
 ﻿using Samids_API.Data;
+using Samids_API.Dto;
 using Samids_API.Models;
 using System.Linq;
 
@@ -11,17 +12,40 @@ namespace Samids_API.Services
         public AttendanceService(SamidsDataContext context) {
             _context = context;
         }
-        public async Task<Attendance> AddStudentAttendance(Attendance attendance)
+        public async Task<Attendance> AddStudentAttendance(AddAttendanceDto attendance)
         {
-            if(await VerifyAttendance(attendance.Student.Rfid, attendance.SubjectSchedule.Room) is not true)
+            var student = await _context.Students.FindAsync(attendance.studentId);
+            var sched = await _context.SubjectSchedules.SingleOrDefaultAsync(s => s.Room == attendance.room);
+            var device = await _context.Devices.SingleOrDefaultAsync(d=> d.Room == attendance.room);
+
+            
+
+            if(await VerifyAttendance(student.Rfid, attendance.room) is not true)
             {
                 return null;
             }
 
-            _context.Attendances.Add(attendance);
+            //Check Remarks goes here
+            //Then append to newAttendance
+
+
+
+            var newAttendance = new Attendance { Student = student, Date = attendance.date, Device = device, SubjectSchedule = sched, ActualTimeIn = attendance.actualTimeIn, ActualTimeOut = attendance.actualTimeout };
+
+            _context.Attendances.Add(newAttendance);
             _context.SaveChanges();
-            return attendance;
+            return newAttendance;
         }
+        //Please check this function - Adotac for time verification purpose remarks
+
+        //public Task<Remarks> CheckRemarks(DateTime time, SubjectSchedule sched)
+        //{
+
+        //    if(time.TimeOfDay < sched.TimeStart.TimeOfDay)
+        //    {
+
+        //    }
+        //}
 
         public async Task<IEnumerable<Attendance>> GetAttendances()
         {
