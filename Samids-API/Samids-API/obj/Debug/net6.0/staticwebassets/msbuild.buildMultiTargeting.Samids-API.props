@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\Samids-API.props" />
-</Project>
