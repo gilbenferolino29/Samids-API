@@ -2,10 +2,10 @@
 {
     public class AddAttendanceDto
     {
-        public int studentId;
-        public string room;
-        public DateTime date;
-        public DateTime actualTimeIn;
-        public DateTime actualTimeout;
+        public int studentId { get; set; }
+        public string room { get; set; }
+        public DateTime date { get; set; }
+        public DateTime actualTimeIn { get; set; }
+        public DateTime actualTimeout { get; set; }
     }
 }

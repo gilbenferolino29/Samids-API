@@ -37,7 +37,7 @@ namespace Samids_API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Attendance>> AddAttendance(AddAttendanceDto attendance)
+        public async Task<ActionResult<Attendance>> AddAttendance([FromBody] AddAttendanceDto attendance)
         {
             return Ok(await _attendanceService.AddStudentAttendance(attendance));
         }

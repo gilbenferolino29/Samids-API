@@ -12,8 +12,8 @@ namespace Samids_API.Services
         private readonly int _absentConfig;
         public AttendanceService(SamidsDataContext context) {
             _context = context;
-            _lateConfig = _context.Configs.SingleOrDefault();
-            _absentConfig = _context.Configs.SingleOrDefault();
+            _lateConfig = _context.Configs.Single().LateMinutes;
+            _absentConfig = _context.Configs.Single().AbsentMinutes;
 
         }
         public async Task<Attendance> AddStudentAttendance(AddAttendanceDto attendance)

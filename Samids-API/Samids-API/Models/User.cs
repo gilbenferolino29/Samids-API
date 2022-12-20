@@ -11,7 +11,7 @@
         public Type Type { get; set; }
 
         public string SchoolYear { get; set; } = string.Empty;
-        public int Deleted { get; set; }
+        public bool Deleted { get; set; } = false;
     }
 
     public enum Type
