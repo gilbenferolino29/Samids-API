@@ -8,34 +8,71 @@ namespace Samids_API.Services
     public class AttendanceService : IAttendanceService
     {
         private readonly SamidsDataContext _context;
-
+        private readonly int _lateConfig;
+        private readonly int _absentConfig;
         public AttendanceService(SamidsDataContext context) {
             _context = context;
+            _lateConfig = _context.Configs.SingleOrDefault();
+            _absentConfig = _context.Configs.SingleOrDefault();
+
         }
         public async Task<Attendance> AddStudentAttendance(AddAttendanceDto attendance)
         {
             var student = await _context.Students.FindAsync(attendance.studentId);
-            var sched = await _context.SubjectSchedules.SingleOrDefaultAsync(s => s.Room == attendance.room);
+            //Checks all rooms with schedule on the DayOfTheWeek - ex. Rooms of subjectschedule on Monday
+            var schedRoom = await _context.SubjectSchedules.Where(s => s.Room == attendance.room && s.Day == attendance.date.DayOfWeek).ToListAsync();
+            //Gets the closest scheduleId based on ActualTimein from Device
+            var sched = (from s in schedRoom let distance = Math.Abs(s.TimeStart.Subtract(attendance.actualTimeIn).Ticks) orderby distance select s).First();
+            
             var device = await _context.Devices.SingleOrDefaultAsync(d=> d.Room == attendance.room);
 
             
-
+            //Checks if student really is a student on this room and have the subject given the schedule
             if(await VerifyAttendance(student.Rfid, attendance.room) is not true)
             {
                 return null;
             }
 
             //Check Remarks goes here
+            var remarks = CheckRemarks(attendance.actualTimeIn, attendance.actualTimeout, sched);
+            
             //Then append to newAttendance
 
 
 
-            var newAttendance = new Attendance { Student = student, Date = attendance.date, Device = device, SubjectSchedule = sched, ActualTimeIn = attendance.actualTimeIn, ActualTimeOut = attendance.actualTimeout };
+            var newAttendance = new Attendance { Student = student, Date = attendance.date, Device = device, remarks = remarks,SubjectSchedule = sched, ActualTimeIn = attendance.actualTimeIn, ActualTimeOut = attendance.actualTimeout };
 
             _context.Attendances.Add(newAttendance);
             _context.SaveChanges();
             return newAttendance;
         }
+
+        public Remarks CheckRemarks(DateTime timeIn, DateTime timeOut, SubjectSchedule sched)
+        {
+
+           var late = sched.TimeStart.AddMinutes(_lateConfig);
+           var absent = sched.TimeStart.AddMinutes(_absentConfig);
+           var cutting = sched.TimeEnd.AddMinutes(-5);
+           if(timeOut.TimeOfDay < cutting.TimeOfDay)
+           {
+             return Remarks.Cutting;
+           }
+            if (timeIn.TimeOfDay > absent.TimeOfDay)
+            {
+                return Remarks.Absent;
+            }
+            else if (timeIn.TimeOfDay > late.TimeOfDay)
+            {
+                return Remarks.Late;
+            }
+
+            return Remarks.OnTime;
+
+                
+            
+           
+        }
+
         //Please check this function - Adotac for time verification purpose remarks
 
         //public Task<Remarks> CheckRemarks(DateTime time, SubjectSchedule sched)

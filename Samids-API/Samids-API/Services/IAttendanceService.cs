@@ -19,7 +19,7 @@ namespace Samids_API.Services
         //After Verification add attendance
         Task<Attendance> AddStudentAttendance(AddAttendanceDto attendance);
 
-        Task<Remarks> CheckRemarks(DateTime time, SubjectSchedule sched);
+        Remarks CheckRemarks(DateTime timeIn, DateTime timeOut, SubjectSchedule sched);
 
 
     }
