@@ -36,10 +36,10 @@ namespace Samids_API.Data
             };
 
             //Students init
-            var Joshua = new Student { FirstName = "Joshua", LastName = "Montero", StudentID = 2019020654, Course = "BSCS", Rfid = 187255239165, Subjects = new List<Subject> { IAS,Test}, Year = Year.Fourth };
-            var Martin = new Student { FirstName = "Martin", LastName = "Lapetaje", StudentID = 2019022233, Course = "BSCS", Rfid = 1341296684,  Subjects = new List<Subject> { IAS,Test2},Year = Year.Fourth };
-            var Gilben = new Student { FirstName = "Gilben", LastName = "Ferolino", StudentID = 2017002181, Course = "BSCS", Rfid = 228249104167, Subjects = new List<Subject> { PL, Test}, Year = Year.Fourth };
-            var James = new Student { FirstName = "James", LastName = "Gadiane", StudentID = 2019010515, Course = "BSCS", Rfid = 2301317684,  Subjects = new List<Subject> { PL, Test2},Year = Year.Fourth };
+            var Joshua = new Student { FirstName = "Joshua", LastName = "Montero", StudentNo = 2019020654, Course = "BSCS", Rfid = 187255239165, Subjects = new List<Subject> { IAS,Test}, Year = Year.Fourth };
+            var Martin = new Student { FirstName = "Martin", LastName = "Lapetaje", StudentNo = 2019022233, Course = "BSCS", Rfid = 1341296684,  Subjects = new List<Subject> { IAS,Test2},Year = Year.Fourth };
+            var Gilben = new Student { FirstName = "Gilben", LastName = "Ferolino", StudentNo = 2017002181, Course = "BSCS", Rfid = 228249104167, Subjects = new List<Subject> { PL, Test}, Year = Year.Fourth };
+            var James = new Student { FirstName = "James", LastName = "Gadiane", StudentNo = 2019010515, Course = "BSCS", Rfid = 2301317684,  Subjects = new List<Subject> { PL, Test2},Year = Year.Fourth };
 
             var Students = new Student[]
             {
@@ -51,9 +51,9 @@ namespace Samids_API.Data
             var config = new Config();
 
             //Faculty init
-            var Leeroy = new Faculty { FirstName = "John Leeroy", LastName = "Gadiane", Subjects = new List<Subject> { PL} };
-            var Marissa = new Faculty { FirstName = "Marissa", LastName = "Buctuanon", Subjects = new List<Subject> { Test2} };
-            var Dan = new Faculty { FirstName = "Daniel", LastName = "Seldura", Subjects = new List<Subject> { Test, IAS } };
+            var Leeroy = new Faculty { FirstName = "John Leeroy", LastName = "Gadiane", Subjects = new List<Subject> { PL} , FacultyNo = 1231231};
+            var Marissa = new Faculty { FirstName = "Marissa", LastName = "Buctuanon", Subjects = new List<Subject> { Test2}, FacultyNo = 3232323};
+            var Dan = new Faculty { FirstName = "Daniel", LastName = "Seldura", Subjects = new List<Subject> { Test, IAS } , FacultyNo = 935939};
 
 
             var Faculties = new Faculty[]
@@ -65,8 +65,11 @@ namespace Samids_API.Data
             var TestUser = new User { FirstName = "Test", LastName = "User", Email = "test@test.com", Password = "test123456", SchoolYear = "2022-2023", Student = James, Type = Models.Type.Student };
 
             context.Students.AddRange(Students);
+            context.SaveChanges();
             context.Faculties.AddRange(Faculties);
+            context.SaveChanges();
             context.Configs.Add(config);
+            context.SaveChanges();
             context.Users.Add(TestUser);
             context.SaveChanges();
         }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Samids_API.Data;
 
@@ -11,9 +12,11 @@ using Samids_API.Data;
 namespace SamidsAPI.Migrations
 {
     [DbContext(typeof(SamidsDataContext))]
-    partial class SamidsDataContextModelSnapshot : ModelSnapshot
+    [Migration("20221220143926_StudentFacultyFix")]
+    partial class StudentFacultyFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -129,9 +132,6 @@ namespace SamidsAPI.Migrations
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("facultyNo")
-                        .HasColumnType("int");
 
                     b.HasKey("FacultyId");
 

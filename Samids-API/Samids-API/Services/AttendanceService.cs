@@ -98,7 +98,7 @@ namespace Samids_API.Services
             {
                 throw new InvalidOperationException("Student does not exist!");
             }
-            return  await _context.Attendances.Where(a =>  a.Student.StudentID == studentId).AsNoTracking().ToListAsync();
+            return  await _context.Attendances.Where(a =>  a.Student.StudentNo== studentId).AsNoTracking().ToListAsync();
         }
 
         //Get All Attendance of Students for Faculty (only assigned subject)
@@ -106,7 +106,7 @@ namespace Samids_API.Services
         {
            
             var faculty = await _context.Faculties.FindAsync(facultyId);
-            var facSub = await _context.Faculties.Where(f => f.FacultyId == facultyId).SelectMany(s => s.Subjects).ToListAsync();
+            var facSub = await _context.Faculties.Where(f => f.FacultyNo == facultyId).SelectMany(s => s.Subjects).ToListAsync();
             
             if  (faculty is null)
             {
