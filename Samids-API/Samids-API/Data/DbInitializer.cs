@@ -68,6 +68,7 @@ namespace Samids_API.Data
             context.SaveChanges();
             context.Faculties.AddRange(Faculties);
             context.SaveChanges();
+            context.SubjectSchedules.AddRange(SubjectSchedules);
             context.Configs.Add(config);
             context.SaveChanges();
             context.Users.Add(TestUser);
