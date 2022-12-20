@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\.NET\\Samids-API\\Samids-API\\Samids-API\\Samids-API.csproj": {}
+    "D:\\.NET\\Samids-API\\Samids-API\\samids-api\\Samids-API.csproj": {}
   },
   "projects": {
-    "D:\\.NET\\Samids-API\\Samids-API\\Samids-API\\Samids-API.csproj": {
+    "D:\\.NET\\Samids-API\\Samids-API\\samids-api\\Samids-API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\.NET\\Samids-API\\Samids-API\\Samids-API\\Samids-API.csproj",
+        "projectUniqueName": "D:\\.NET\\Samids-API\\Samids-API\\samids-api\\Samids-API.csproj",
         "projectName": "Samids-API",
-        "projectPath": "D:\\.NET\\Samids-API\\Samids-API\\Samids-API\\Samids-API.csproj",
+        "projectPath": "D:\\.NET\\Samids-API\\Samids-API\\samids-api\\Samids-API.csproj",
         "packagesPath": "C:\\Users\\gilbe\\.nuget\\packages\\",
-        "outputPath": "D:\\.NET\\Samids-API\\Samids-API\\Samids-API\\obj\\",
+        "outputPath": "D:\\.NET\\Samids-API\\Samids-API\\samids-api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\gilbe\\AppData\\Roaming\\NuGet\\NuGet.Config",

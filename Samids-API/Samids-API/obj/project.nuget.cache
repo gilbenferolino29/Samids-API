@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "UoKBJKtWQSoUwG8RNe6PN4i7AqAYHMzh9j3AV60FSdIgw7j8tmB4emCLSJLaY2LwkmsMC7ijn2YbntT6YyAWJA==",
+  "dgSpecHash": "5q/hHPp6uWILfy48gBDhqMC3lf+5/u3ZvWLEH7jr9Qca9GwXAoXxHceDDWAeTiU+qttZa7/2LYb7MFetjX45+g==",
   "success": true,
-  "projectFilePath": "D:\\.NET\\Samids-API\\Samids-API\\Samids-API\\Samids-API.csproj",
+  "projectFilePath": "D:\\.NET\\Samids-API\\Samids-API\\samids-api\\Samids-API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\gilbe\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\gilbe\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
