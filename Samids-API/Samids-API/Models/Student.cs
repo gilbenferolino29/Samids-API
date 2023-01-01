@@ -6,8 +6,6 @@ namespace Samids_API.Models
 {
     public class Student
     {
-
-       
         public int StudentID { get; set; }
         [Required]
         public int StudentNo { get; set; }

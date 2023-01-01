@@ -9,7 +9,7 @@ namespace Samids_API.Models
         public string SubjectDescription { get; set; } = string.Empty;
 
         [JsonIgnore]
-        public ICollection<Student>? Students { get; set; }
+        public ICollection<Student>? Students { get; set; } 
         public ICollection<Faculty>? Faculties { get; set; }
 
         public ICollection<SubjectSchedule>? SubjectSchedules { get; set; }

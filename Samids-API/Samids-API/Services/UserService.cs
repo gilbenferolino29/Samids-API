@@ -1,22 +1,38 @@
-﻿using Samids_API.Models;
+﻿using Samids_API.Data;
+using Samids_API.Models;
+using Samids_API.Services.Interfaces;
 
 namespace Samids_API.Services
 {
     public class UserService : IUserService
     {
+        private readonly SamidsDataContext _context;
+
+        public UserService(SamidsDataContext context)
+        {
+            _context = context;
+        }
         public Task<User?> DeleteUser(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<User>> GetAll()
+        public async Task<IEnumerable<User>> GetUsers()
         {
-            throw new NotImplementedException();
+            return await _context.Users.AsNoTracking().ToListAsync();
         }
 
-        public Task<User?> GetById(int id)
+        public async Task<User?> GetById(int id)
         {
-            throw new NotImplementedException();
+            var user = await _context.Users.FindAsync(id);
+
+            if (user is null)
+            {
+                throw new InvalidOperationException("User doesn't exist");
+            }
+
+            return user;
+
         }
 
         public Task<User?> Register(User newUser)

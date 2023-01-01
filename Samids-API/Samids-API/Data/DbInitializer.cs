@@ -11,11 +11,10 @@ namespace Samids_API.Data
             if(context.Subjects.Any() && 
                context.Students.Any() && 
                context.Faculties.Any() &&
-               context.Attendances.Any() &&
                context.Configs.Any() &&
                context.SubjectSchedules.Any() &&
-               context.Users.Any() && 
-               context.Devices.Any()) {
+               context.Users.Any() 
+              ) {
                 return;
             }
 
@@ -61,6 +60,8 @@ namespace Samids_API.Data
                 Leeroy, Marissa, Dan
             };
 
+            //Devices init
+            var bcl1 = new Device { Room = "BCL1" };
             //Init users
             var TestUser = new User { FirstName = "Test", LastName = "User", Email = "test@test.com", Password = "test123456", SchoolYear = "2022-2023", Student = James, Type = Models.Type.Student };
 
@@ -69,9 +70,11 @@ namespace Samids_API.Data
             context.Faculties.AddRange(Faculties);
             context.SaveChanges();
             context.SubjectSchedules.AddRange(SubjectSchedules);
+            context.SaveChanges();
             context.Configs.Add(config);
             context.SaveChanges();
             context.Users.Add(TestUser);
+            context.Devices.Add(bcl1);
             context.SaveChanges();
         }
             

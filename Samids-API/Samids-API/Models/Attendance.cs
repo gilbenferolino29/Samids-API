@@ -21,10 +21,10 @@ namespace Samids_API.Models
 
     public enum Remarks
     {
-        OnTime,
-        Late,
-        Cutting,
-        Absent
+        OnTime, // 0
+        Late, // 1
+        Cutting, // 2
+        Absent // 3
 
     }
 }

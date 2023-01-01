@@ -1,6 +1,7 @@
 ﻿using Samids_API.Data;
 using Samids_API.Dto;
 using Samids_API.Models;
+using Samids_API.Services.Interfaces;
 using System.Linq;
 
 namespace Samids_API.Services
@@ -16,9 +17,31 @@ namespace Samids_API.Services
             _absentConfig = _context.Configs.Single().AbsentMinutes;
 
         }
+
+        //GetAttendancesOverload
+        public async Task<IEnumerable<Attendance>> GetAttendances()
+        {
+            return await _context.Attendances.AsNoTracking().ToListAsync();
+        }
+        public async Task<IEnumerable<Attendance>> GetAttendances(string room)
+        {
+            return await _context.Attendances.Where(a => a.SubjectSchedule.Room == room).AsNoTracking().ToListAsync();
+        }
+        public async Task<IEnumerable<Attendance>> GetAttendances(int studentNo)
+        {
+            return await _context.Attendances.Where(a => a.Student.StudentNo == studentNo).AsNoTracking().ToListAsync();
+        }
+        public async Task<IEnumerable<Attendance>> GetAttendances(Remarks remarks)
+        {
+            return await _context.Attendances.Where(a => a.remarks == remarks).AsNoTracking().ToListAsync();
+        }
+
+
+        //
+
         public async Task<Attendance> AddStudentAttendance(AddAttendanceDto attendance)
         {
-            var student = await _context.Students.FindAsync(attendance.studentId);
+            var student = await _context.Students.Where(s => s.StudentNo == attendance.studentNo).SingleAsync();
             //Checks all rooms with schedule on the DayOfTheWeek - ex. Rooms of subjectschedule on Monday
             var schedRoom = await _context.SubjectSchedules.Where(s => s.Room == attendance.room && s.Day == attendance.date.DayOfWeek).ToListAsync();
             //Gets the closest scheduleId based on ActualTimein from Device
@@ -26,6 +49,10 @@ namespace Samids_API.Services
             
             var device = await _context.Devices.SingleOrDefaultAsync(d=> d.Room == attendance.room);
 
+            if (student is null)
+            {
+                throw new InvalidOperationException("Student does not exist!");
+            }
             
             //Checks if student really is a student on this room and have the subject given the schedule
             if(await VerifyAttendance(student.Rfid, attendance.room) is not true)
@@ -66,47 +93,32 @@ namespace Samids_API.Services
                 return Remarks.Late;
             }
 
-            return Remarks.OnTime;
-
-                
-            
+            return Remarks.OnTime;           
            
         }
 
-        //Please check this function - Adotac for time verification purpose remarks
-
-        //public Task<Remarks> CheckRemarks(DateTime time, SubjectSchedule sched)
-        //{
-
-        //    if(time.TimeOfDay < sched.TimeStart.TimeOfDay)
-        //    {
-
-        //    }
-        //}
-
-        public async Task<IEnumerable<Attendance>> GetAttendances()
-        {
-            return await _context.Attendances.AsNoTracking().ToListAsync();
-        }
+        //
+        
 
         public async Task<IEnumerable<Attendance>> GetStudentAttendance(int studentId)
         {
             
-            var student = await _context.Students.FindAsync(studentId);
-
+            var student = await _context.Students.Where(s=>s.StudentNo == studentId).SingleAsync();
+            
             if( student is null)
             {
                 throw new InvalidOperationException("Student does not exist!");
             }
-            return  await _context.Attendances.Where(a =>  a.Student.StudentNo== studentId).AsNoTracking().ToListAsync();
+            return  await _context.Attendances.Where(a => a.Student.StudentNo== studentId).AsNoTracking().ToListAsync();
         }
 
         //Get All Attendance of Students for Faculty (only assigned subject)
         public async Task<IEnumerable<Attendance>> GetStudFacAttendance(int facultyId)
         {
            
-            var faculty = await _context.Faculties.FindAsync(facultyId);
+            var faculty = await _context.Faculties.Where(f=> f.FacultyNo == facultyId).SingleAsync();
             var facSub = await _context.Faculties.Where(f => f.FacultyNo == facultyId).SelectMany(s => s.Subjects).ToListAsync();
+            var sched = await _context.SubjectSchedules.Include(s => s.Subject).AsNoTracking().ToListAsync();
             
             if  (faculty is null)
             {
@@ -117,9 +129,10 @@ namespace Samids_API.Services
             {
                 throw new InvalidOperationException("Faculty may not have access or not assigned to any subject");
             }
-
-            var ssSub = from subject in facSub join ss in _context.Set<SubjectSchedule>() on subject.SubjectID equals ss.Subject!.SubjectID select new { ss };
-            var query = from id in ssSub join atd in _context.Set<Attendance>() on id.ss.SchedId equals atd.SubjectSchedule.SchedId select atd;
+            Console.WriteLine("1231231");
+            var ssSub = from subject in facSub join ss in sched on subject.SubjectID equals ss.Subject.SubjectID select ss ;
+            Console.Write(ssSub);
+            var query = from id in ssSub join atd in _context.Set<Attendance>() on id.SchedId equals atd.SubjectSchedule.SchedId select atd;
             return query;
         }
 
@@ -129,7 +142,7 @@ namespace Samids_API.Services
             //Verify if student exists in the database - Query
             var queryStud = await _context.Students.Include(s=>s.Subjects).AsNoTracking().SingleOrDefaultAsync(s => s.Rfid == rfid);
             //Verify if room is assigned to a schedule - Query
-            var queryS = await _context.SubjectSchedules.Where(s=>s.Room == room).AsNoTracking().ToListAsync();
+            var queryS = await _context.SubjectSchedules.Where(s=>s.Room == room).Include(s=>s.Subject).AsNoTracking().ToListAsync();
 
             List<Subject> querySubjects = new(){};
            

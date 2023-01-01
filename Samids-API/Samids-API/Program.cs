@@ -1,6 +1,7 @@
 global using Microsoft.EntityFrameworkCore;
 using Samids_API.Data;
 using Samids_API.Services;
+using Samids_API.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

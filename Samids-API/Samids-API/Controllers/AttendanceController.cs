@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Samids_API.Dto;
 using Samids_API.Models;
-using Samids_API.Services;
+using Samids_API.Services.Interfaces;
 
 namespace Samids_API.Controllers
 {
@@ -24,6 +24,34 @@ namespace Samids_API.Controllers
 
         }
         [HttpGet]
+        [Route("GetAllByRoom")]
+        public async Task<ActionResult<IEnumerable<Attendance>>> GetAll(string room)
+        {
+            return Ok(await _attendanceService.GetAttendances(room));
+
+        }
+        [HttpGet]
+        [Route("GetAllById")]
+        public async Task<ActionResult<IEnumerable<Attendance>>> GetAll(int id)
+        {
+            return Ok(await _attendanceService.GetAttendances(id));
+
+        }
+        [HttpGet]
+        [Route("GetAllRemarks")]
+        public async Task<ActionResult<IEnumerable<Attendance>>> GetAll(Remarks remarks)
+        {
+            return Ok(await _attendanceService.GetAttendances(remarks));
+
+        }
+
+
+
+
+
+
+
+        [HttpGet]
         [Route("GetAllSA")]
         public async Task<ActionResult<IEnumerable<Attendance>>> GetAllSA(int studentId)
         {
@@ -39,7 +67,16 @@ namespace Samids_API.Controllers
         [HttpPost]
         public async Task<ActionResult<Attendance>> AddAttendance([FromBody] AddAttendanceDto attendance)
         {
-            return Ok(await _attendanceService.AddStudentAttendance(attendance));
+
+            var result = await _attendanceService.AddStudentAttendance(attendance);
+
+            if (result is null)
+            {
+                return NotFound();
+            }
+
+
+            return Ok(result);
         }
     }
 }
