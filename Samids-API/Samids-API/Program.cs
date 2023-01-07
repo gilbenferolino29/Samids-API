@@ -2,8 +2,11 @@ global using Microsoft.EntityFrameworkCore;
 using Samids_API.Data;
 using Samids_API.Services;
 using Samids_API.Services.Interfaces;
+using Samids_API.MQTT_Utils;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 // Add services to the container.
 
@@ -20,7 +23,9 @@ builder.Services.AddDbContext<SamidsDataContext>(options =>
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IUserService, UserService>();
+
 var app = builder.Build();
+//var server = MQTT_Server.CreateHostBuilder(args).Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -28,6 +33,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 app.UseHttpsRedirection();
 
@@ -37,4 +43,5 @@ app.MapControllers();
 
 app.CreateDbIfNotExists();
 
+MQTT_Server.Start_MqttServer();
 app.Run();
