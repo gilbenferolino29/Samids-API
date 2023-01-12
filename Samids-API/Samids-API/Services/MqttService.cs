@@ -8,6 +8,8 @@ namespace Samids_API.Services
     public class MqttService: IMqttService
 
     {
+        public MqttService() { 
         
+        }
     }
 }

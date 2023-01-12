@@ -2,11 +2,12 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Text;
+using System.Net;
+
+using MQTTnet;
 using MQTTnet.AspNetCore;
 using MQTTnet.Server;
-
-using Samids_API.Services;
-using Samids_API.Services.Interfaces;
 
 namespace Samids_API.MQTT_Utils
 {
@@ -26,7 +27,7 @@ namespace Samids_API.MQTT_Utils
         //              })
         //            .UseStartup<Startup>();
         //        });
-
+        
         public static Task Start_MqttServer()
         {
             /*
@@ -40,12 +41,11 @@ namespace Samids_API.MQTT_Utils
                         webBuilder.UseKestrel(
                             o =>
                             {
-                                // This will allow MQTT connections based on TCP port 1883.
-                                o.ListenAnyIP(1883, l => l.UseMqtt());
+                                // This will allow MQTT connections based on TCP port 1412.
+                                o.ListenAnyIP(1412, l => l.UseMqtt());
 
-                                // This will allow MQTT connections based on HTTP WebSockets with URI "localhost:5000/mqtt"
-                                // See code below for URI configuration.
-                                o.ListenAnyIP(3000); // Default HTTP pipeline
+                                o.ListenAnyIP(7170); // Default HTTPS pipeline
+                                o.ListenAnyIP(5043); // Default HTTP pipeline
                             });
 
                         webBuilder.UseStartup<Startup>();
@@ -56,9 +56,11 @@ namespace Samids_API.MQTT_Utils
 
         sealed class MqttController
         {
+            //private readonly IMqttService service;
             public MqttController()
             {
                 // Inject other services via constructor.
+                //this.service = new IMqttService();
             }
 
             public Task OnClientConnected(ClientConnectedEventArgs eventArgs)
@@ -73,12 +75,33 @@ namespace Samids_API.MQTT_Utils
                 Console.WriteLine($"Client '{eventArgs.ClientId}' wants to connect. Accepting!");
                 return Task.CompletedTask;
             }
+
+            public Task OnNewMessage(InterceptingPublishEventArgs eventArgs)
+            {
+                var payload = eventArgs.ApplicationMessage?.Payload == null ? null : Encoding.UTF8.GetString(eventArgs.ApplicationMessage?.Payload);
+
+                Console.WriteLine(
+                    $"===================================================\n" +
+                    $"TimeStamp: {DateTime.Now} -- \n" +
+                    $"Message: ClientId = {eventArgs.ClientId}, \n" +
+                    $"Topic = {eventArgs.ApplicationMessage?.Topic}, \n" +
+                    $"Payload = {payload}, \n" +
+                    $"QoS = {eventArgs.ApplicationMessage?.QualityOfServiceLevel}, \n" +
+                    $"Retain-Flag = {eventArgs.ApplicationMessage?.Retain}"
+                    );
+
+                return Task.CompletedTask;
+
+            }
         }
 
         sealed class Startup
         {
             public void Configure(IApplicationBuilder app, IWebHostEnvironment environment, MqttController mqttController)
             {
+                Console.WriteLine("Setting up :: Startup Configure ");
+
+                app.UseHttpsRedirection();
                 app.UseRouting();
 
                 app.UseEndpoints(
@@ -87,13 +110,15 @@ namespace Samids_API.MQTT_Utils
                         //endpoints.MapControllers();
                         //Setup mqtt endpoints for websocket (localhost:{port}/mqtt}
                         //.NET CORE 3.1 Approach
-                        //endpoints.MapMqtt("/mqtt");
+                        endpoints.MapMqtt("mqtt/RFID");
                         //.NET 5 Approach
 
                         endpoints.MapConnectionHandler<MqttConnectionHandler>(
-                            "/mqtt",
+                            "mqtt/RFID",
                             httpConnectionDispatcherOptions => httpConnectionDispatcherOptions.WebSockets.SubProtocolSelector =
                                 protocolList => protocolList.FirstOrDefault() ?? string.Empty);
+
+                        
                     });
 
                 app.UseMqttServer(
@@ -102,26 +127,34 @@ namespace Samids_API.MQTT_Utils
                         /*
                          * Attach event handlers etc. if required.
                          */
-                        
-
                         server.ValidatingConnectionAsync += mqttController.ValidateConnection;
                         server.ClientConnectedAsync += mqttController.OnClientConnected;
+
+                        //server.InterceptingPublishAsync += args =>
+                        //{
+                        //    args.ApplicationMessage.Topic += "mqtt/RFID";
+                        //    return Task.CompletedTask;
+                        //};
+
+                        server.InterceptingPublishAsync += mqttController.OnNewMessage;
                     });
             }
 
             public void ConfigureServices(IServiceCollection services)
             {
+                Console.WriteLine("Setting up :: ConfigureServices ");
                 services.AddCors();
                 services.AddHostedMqttServer(
                     optionsBuilder =>
                     {
                         optionsBuilder.WithDefaultEndpoint(); // set endpoint to localhost
                         optionsBuilder.WithDefaultEndpointPort(1412); // port used will be 1312
+                        optionsBuilder.WithDefaultEndpointBoundIPAddress(IPAddress.Parse("127.0.0.1"));
 
                     });
 
-                services.AddMqttConnectionHandler();
                 services.AddConnections();
+                services.AddMqttConnectionHandler();
 
                 services.AddSingleton<MqttController>();
 
