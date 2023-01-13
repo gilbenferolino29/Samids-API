@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Samids_API.Dto;
 using Samids_API.Models;
-using Samids_API.Services.Interfaces;
+using Samids_API.Services.Interface;
 
 namespace Samids_API.Controllers
 {
@@ -16,9 +17,58 @@ namespace Samids_API.Controllers
             _studentService = studentService;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Student>>> GetStudents()
+        public async Task<ActionResult<CRUDReturn>> GetStudents()
         {
             return Ok(await _studentService.GetStudents());
+        }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CRUDReturn>> GetStudentById(int id)
+        {
+            return Ok(await _studentService.GetStudentById(id));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<CRUDReturn>> AddStudent (Student student)
+        {
+            return Ok(await _studentService.AddStudent(student));
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult<CRUDReturn>> DeleteStudent(int id)
+        {
+            return Ok(await _studentService.DeleteStudent(id));
+        }
+        [HttpPatch]
+        public async Task<ActionResult<CRUDReturn>> UpdateStudent(StudentUpdateDto request)
+        {
+            return Ok(await _studentService.UpdateStudent(request));
+        }
+        [HttpPatch]
+        [Route("RemoveSubject")]
+        public async Task<ActionResult<CRUDReturn>> RemoveStudentSubject (AddStudentSubjectDto<int> request)
+        {
+            return Ok(await _studentService.RemoveStudentSubjects(request));
+        }
+
+        [HttpPatch]
+        [Route("RemoveSubjects")]
+        public async Task<ActionResult<CRUDReturn>> RemoveStudentSubject(AddStudentSubjectDto<List<Subject>> request)
+        {
+            return Ok(await _studentService.RemoveStudentSubjects(request));
+        }
+
+
+        [HttpPatch]
+        [Route("AddSubject")]
+        public async Task<ActionResult<CRUDReturn>> AddStudentSubject (AddStudentSubjectDto<int> request)
+        {
+            return Ok(await _studentService.AddStudentSubjects(request));
+        }
+        [HttpPatch]
+        [Route("AddSubjects")]
+        public async Task<ActionResult<CRUDReturn>> AddStudentSubject (AddStudentSubjectDto<List<Subject>> request)
+        {
+            return Ok(await _studentService.AddStudentSubjects(request));
         }
     }
 }
