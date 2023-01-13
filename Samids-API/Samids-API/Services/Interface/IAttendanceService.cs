@@ -6,9 +6,20 @@ namespace Samids_API.Services.Interface
     public interface IAttendanceService
     {
         Task<CRUDReturn> GetAttendances();
+
+        Task<CRUDReturn> GetAttendances(DateTime date);
+        Task<CRUDReturn> GetAttendances(DateTime date, int studentNo);
+
         Task<CRUDReturn> GetAttendances(string room);
-        Task<CRUDReturn> GetAttendances(int studentId);
+        Task<CRUDReturn> GetAttendances(string room, Remarks remarks);
+        Task<CRUDReturn> GetAttendances(string room, int studentNo); 
+        Task<CRUDReturn> GetAttendances(int studentNo);
+        Task<CRUDReturn> GetAttendances(int studentNo, Remarks remarks);
+
         Task<CRUDReturn> GetAttendances(Remarks remarks);
+
+        Task<CRUDReturn> GetAttendances(string room, int studentNo, Remarks remarks);
+
         //Get All Attendance of Students for Faculty (only assigned subject)
         Task<CRUDReturn> GetStudFacAttendance(int facultyId);
 
@@ -16,7 +27,7 @@ namespace Samids_API.Services.Interface
         Task<bool> VerifyAttendance(long rfid, string room);
 
         //Get All Attendance of Students per Subject
-        Task<CRUDReturn> GetStudentAttendance(int studentId);
+        Task<CRUDReturn> GetStudentAttendance(int studentNo);
 
         //After Verification add attendance
         Task<CRUDReturn> AddStudentAttendance(AddAttendanceDto attendance);

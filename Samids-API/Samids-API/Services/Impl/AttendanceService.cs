@@ -20,6 +20,16 @@ namespace Samids_API.Services.Impl
         }
 
         //GetAttendancesOverload
+
+        public Task<CRUDReturn> GetAttendances(DateTime date)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<CRUDReturn> GetAttendances(DateTime date, int studentNo)
+        {
+            throw new NotImplementedException();
+        }
         public async Task<CRUDReturn> GetAttendances()
         {
             return new CRUDReturn 
@@ -30,17 +40,46 @@ namespace Samids_API.Services.Impl
             return new CRUDReturn 
             { success = true, data = await _context.Attendances.Where(a => a.SubjectSchedule.Room == room).AsNoTracking().ToListAsync() };
         }
+        public async Task<CRUDReturn> GetAttendances(string room, Remarks remarks)
+        {
+            //_context.Attendances.Include(a=>a.SubjectSchedule).AsNoTracking().ToListAsync() - For use if code below doesn't work
+
+            return new CRUDReturn 
+            {success = true, data = await _context.Attendances.Where(a=> a.SubjectSchedule.Room == room && a.remarks ==remarks).AsNoTracking().ToListAsync()};
+        }
+
+        public async Task<CRUDReturn> GetAttendances(string room, int studentNo)
+        {
+            //_context.Attendances.Include(a=>a.Student).AsNoTracking().ToListAsync() - For use if code below doesn't work
+            return new CRUDReturn 
+            { success = true, data = await _context.Attendances.Where(a => a.SubjectSchedule.Room == room && a.Student.StudentNo == studentNo).AsNoTracking().ToListAsync() };
+        }
         public async Task<CRUDReturn> GetAttendances(int studentNo)
         {
             return new CRUDReturn 
             { success = true, data = await _context.Attendances.Where(a => a.Student.StudentNo == studentNo).AsNoTracking().ToListAsync() };
+        }
+        public async Task<CRUDReturn> GetAttendances(int studentNo, Remarks remarks)
+        {
+            return new CRUDReturn
+            { success = true, data = await _context.Attendances.Where(a => a.Student.StudentNo == studentNo && a.remarks == remarks).AsNoTracking().ToListAsync() };
         }
         public async Task<CRUDReturn> GetAttendances(Remarks remarks)
         {
             return new CRUDReturn
             { success = true, data = await _context.Attendances.Where(a => a.remarks == remarks).AsNoTracking().ToListAsync()};
         }
+       
 
+        
+
+        
+
+        public async Task<CRUDReturn> GetAttendances(string room, int studentNo, Remarks remarks)
+        {
+            return new CRUDReturn
+            { success = true, data = await _context.Attendances.Where(a => a.SubjectSchedule.Room == room && a.Student.StudentNo == studentNo && a.remarks == remarks).AsNoTracking().ToListAsync() };
+        }
 
         //
 
@@ -184,5 +223,7 @@ namespace Samids_API.Services.Impl
 
 
         }
+
+        
     }
 }
