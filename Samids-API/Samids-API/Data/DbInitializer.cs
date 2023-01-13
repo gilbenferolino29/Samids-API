@@ -12,8 +12,7 @@ namespace Samids_API.Data
                context.Students.Any() && 
                context.Faculties.Any() &&
                context.Configs.Any() &&
-               context.SubjectSchedules.Any() &&
-               context.Users.Any() 
+               context.SubjectSchedules.Any()
               ) {
                 return;
             }
@@ -63,7 +62,7 @@ namespace Samids_API.Data
             //Devices init
             var bcl1 = new Device { Room = "BCL1" };
             //Init users
-            var TestUser = new User { FirstName = "Test", LastName = "User", Email = "test@test.com", Password = "test123456", SchoolYear = "2022-2023", Student = James, Type = Models.Type.Student };
+            //var TestUser = new User { FirstName = "Test", LastName = "User", Email = "test@test.com", Password = "test123456", SchoolYear = "2022-2023", Student = James, Type = Models.Type.Student };
 
             context.Students.AddRange(Students);
             context.SaveChanges();
@@ -73,7 +72,7 @@ namespace Samids_API.Data
             context.SaveChanges();
             context.Configs.Add(config);
             context.SaveChanges();
-            context.Users.Add(TestUser);
+            /*context.Users.Add(TestUser)*/;
             context.Devices.Add(bcl1);
             context.SaveChanges();
         }
