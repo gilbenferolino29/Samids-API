@@ -21,14 +21,16 @@ namespace Samids_API.Services.Impl
 
         //GetAttendancesOverload
 
-        public Task<CRUDReturn> GetAttendances(DateTime date)
+        public async Task<CRUDReturn> GetAttendances(DateTime date)
         {
-            throw new NotImplementedException();
+            return new CRUDReturn
+            { success = true, data = await _context.Attendances.Where(a => a.Date == date).AsNoTracking().ToListAsync() };
         }
 
-        public Task<CRUDReturn> GetAttendances(DateTime date, int studentNo)
+        public async Task<CRUDReturn> GetAttendances(DateTime date, int studentNo)
         {
-            throw new NotImplementedException();
+            return new CRUDReturn
+            { success = true, data = await _context.Attendances.Where(a => a.Date == date && a.Student.StudentNo == studentNo).AsNoTracking().ToListAsync() };
         }
         public async Task<CRUDReturn> GetAttendances()
         {
