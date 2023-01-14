@@ -23,24 +23,44 @@ namespace Samids_API.Controllers
 
         }
         [HttpGet("{room}")]
-        public async Task<ActionResult<CRUDReturn>> GetAllByRoom(string room)
+        public async Task<ActionResult<CRUDReturn>> GetAll(string room)
         {
             return Ok(await _attendanceService.GetAttendances(room));
-
         }
-        [HttpGet("{id}")]
-        
-        public async Task<ActionResult<CRUDReturn>> GetAll(int id)
+        [HttpGet("{room}&{remarks}")]
+        public async Task<ActionResult<CRUDReturn>> GetAll(string room, Remarks remarks)
         {
-            return Ok(await _attendanceService.GetAttendances(id));
+            return Ok(await _attendanceService.GetAttendances(room, remarks));
+        }
+        [HttpGet("{room}&{studentNo}")]
+        public async Task<ActionResult<CRUDReturn>> GetAll(string room, int studentNo)
+        {
+            return Ok(await _attendanceService.GetAttendances(room, studentNo));
+        }
+        [HttpGet("{studentNo}")]
+        
+        public async Task<ActionResult<CRUDReturn>> GetAll(int studentNo)
+        {
+            return Ok(await _attendanceService.GetAttendances(studentNo));
+        }
+        [HttpGet("{studentNo}&{remarks}")]
+        public async Task<ActionResult<CRUDReturn>> GetAll(int studentNo, Remarks remarks)
+        {
+            return Ok(await _attendanceService.GetAttendances(studentNo, remarks));
 
         }
         [HttpGet("{remarks}")]
         public async Task<ActionResult<CRUDReturn>> GetAll(Remarks remarks)
         {
             return Ok(await _attendanceService.GetAttendances(remarks));
+        }
+        [HttpGet("{room}&{studentNo}&{remarks}")]
+        public async Task<ActionResult<CRUDReturn>> GetAll(string room, int studentNo, Remarks remarks)
+        {
+            return Ok(await _attendanceService.GetAttendances(room, studentNo, remarks));
 
         }
+
 
 
 

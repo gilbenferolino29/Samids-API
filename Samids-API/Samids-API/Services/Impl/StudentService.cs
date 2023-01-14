@@ -157,5 +157,45 @@ namespace Samids_API.Services.Impl
             return new CRUDReturn { success = true, data = student };
 
         }
+
+        public async Task<CRUDReturn> GetStudentClasses(DateTime date, int studentNo)
+        {
+
+            var subjects = await _context.Students.Where(s => s.StudentNo == studentNo).SelectMany(s => s.Subjects).ToListAsync();
+            var sched = await _context.SubjectSchedules.Include(s => s.Subject).AsNoTracking().ToListAsync();
+            if(subjects is null)
+            {
+                return new CRUDReturn
+                {
+                    success = false,
+                    data = StudentNotFound
+                };
+            }
+
+            var schedule = from subject in subjects join ss in sched on subject.SubjectID equals ss.Subject.SubjectID where ss.TimeStart > date select ss;
+
+            return new CRUDReturn
+            { success = true, data = schedule };
+        }
+
+        public async Task<CRUDReturn> GetStudentClasses(DateOnly date, int studentNo)
+        {
+            var subjects = await _context.Students.Where(s => s.StudentNo == studentNo).SelectMany(s => s.Subjects).ToListAsync();
+            var sched = await _context.SubjectSchedules.Include(s => s.Subject).AsNoTracking().ToListAsync();
+
+            if (subjects is null)
+            {
+                return new CRUDReturn
+                {
+                    success = false,
+                    data = StudentNotFound
+                };
+            }
+
+            var schedule = from subject in subjects join ss in sched on subject.SubjectID equals ss.Subject.SubjectID where ss.Day > date.DayOfWeek select ss;
+
+            return new CRUDReturn
+            { success = true, data = schedule };
+        }
     }
 }
