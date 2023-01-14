@@ -1,8 +1,10 @@
 global using Microsoft.EntityFrameworkCore;
+global using static Samids_API.Constants;
 using Samids_API.Data;
-using Samids_API.Services;
-using Samids_API.Services.Interfaces;
 using Samids_API.MQTT_Utils;
+using Samids_API.Services.Impl;
+using Samids_API.Services.Interface;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,10 +22,13 @@ builder.Services.AddDbContext<SamidsDataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+// Services used
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<IFacultyService, FacultyService>();
 builder.Services.AddScoped<IUserService, UserService>();
-
+builder.Services.AddScoped<IConfigService, ConfigService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 var app = builder.Build();
 //var server = MQTT_Server.CreateHostBuilder(args).Build();
 

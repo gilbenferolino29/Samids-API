@@ -3,6 +3,6 @@
     public class AddStudentSubjectDto<T>
     {
         public int StudentNo { get; set; }
-        public T Subject { get; set; }
+        public T? Subject { get; set; }
     }
 }

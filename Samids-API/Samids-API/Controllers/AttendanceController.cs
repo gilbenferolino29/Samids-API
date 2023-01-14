@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Samids_API.Dto;
 using Samids_API.Models;
-using Samids_API.Services.Interfaces;
+using Samids_API.Services.Interface;
 
 namespace Samids_API.Controllers
 {
@@ -18,28 +18,25 @@ namespace Samids_API.Controllers
         }
 
         [HttpGet]
-        [Route("GetAll")]
-        public async Task<ActionResult<IEnumerable<Attendance>>> GetAll () {
+        public async Task<ActionResult<CRUDReturn>> GetAll() {
             return Ok(await _attendanceService.GetAttendances());
 
         }
-        [HttpGet]
-        [Route("GetAllByRoom")]
-        public async Task<ActionResult<IEnumerable<Attendance>>> GetAll(string room)
+        [HttpGet("{room}")]
+        public async Task<ActionResult<CRUDReturn>> GetAllByRoom(string room)
         {
             return Ok(await _attendanceService.GetAttendances(room));
 
         }
-        [HttpGet]
-        [Route("GetAllById")]
-        public async Task<ActionResult<IEnumerable<Attendance>>> GetAll(int id)
+        [HttpGet("{id}")]
+        
+        public async Task<ActionResult<CRUDReturn>> GetAll(int id)
         {
             return Ok(await _attendanceService.GetAttendances(id));
 
         }
-        [HttpGet]
-        [Route("GetAllRemarks")]
-        public async Task<ActionResult<IEnumerable<Attendance>>> GetAll(Remarks remarks)
+        [HttpGet("{remarks}")]
+        public async Task<ActionResult<CRUDReturn>> GetAll(Remarks remarks)
         {
             return Ok(await _attendanceService.GetAttendances(remarks));
 
@@ -50,33 +47,23 @@ namespace Samids_API.Controllers
 
 
 
-
         [HttpGet]
         [Route("GetAllSA")]
-        public async Task<ActionResult<IEnumerable<Attendance>>> GetAllSA(int studentId)
+        public async Task<ActionResult<CRUDReturn>> GetAllSA(int studentId)
         {
-            return Ok(await _attendanceService.GetStudentAttendance( studentId));
+            return Ok(await _attendanceService.GetStudentAttendance(studentId));
         }
         [HttpGet]
         [Route("GetAllFA")]
-        public async Task<ActionResult<IEnumerable<Attendance>>> GetAllFA(int facultyId)
+        public async Task<ActionResult<CRUDReturn>> GetAllFA(int facultyId)
         {
             return Ok(await _attendanceService.GetStudFacAttendance( facultyId));
         }
 
         [HttpPost]
-        public async Task<ActionResult<Attendance>> AddAttendance([FromBody] AddAttendanceDto attendance)
+        public async Task<ActionResult<CRUDReturn>> AddAttendance([FromBody] AddAttendanceDto attendance)
         {
-
-            var result = await _attendanceService.AddStudentAttendance(attendance);
-
-            if (result is null)
-            {
-                return NotFound();
-            }
-
-
-            return Ok(result);
+            return Ok(await _attendanceService.AddStudentAttendance(attendance));
         }
     }
 }
