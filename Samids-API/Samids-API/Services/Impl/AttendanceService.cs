@@ -1,4 +1,5 @@
-﻿using Samids_API.Data;
+﻿using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using Samids_API.Data;
 using Samids_API.Dto;
 using Samids_API.Models;
 using Samids_API.Services.Interface;
@@ -19,6 +20,41 @@ namespace Samids_API.Services.Impl
 
         }
 
+        public async Task<CRUDReturn> GetRemarksCount()
+        {
+            var late = (await _context.Attendances.Where(a => a.remarks == Remarks.Late).ToListAsync()).Count;
+            var cutting = (await _context.Attendances.Where(a => a.remarks == Remarks.Cutting).ToListAsync()).Count;
+            var absent = (await _context.Attendances.Where(a => a.remarks == Remarks.Absent).ToListAsync()).Count;
+            var onTime = (await _context.Attendances.Where(a => a.remarks == Remarks.OnTime).ToListAsync()).Count;
+
+           var count = new List<int> { onTime, late, cutting, absent };
+            
+            return new CRUDReturn
+            { success = true, data = count };
+        }
+        public async Task<CRUDReturn> GetRemarksCount(int studentNo)
+        {
+            var late = (await _context.Attendances.Where(a => a.remarks == Remarks.Late && a.Student.StudentNo == studentNo).ToListAsync()).Count;
+            var cutting = (await _context.Attendances.Where(a => a.remarks == Remarks.Cutting && a.Student.StudentNo == studentNo).ToListAsync()).Count;
+            var absent = (await _context.Attendances.Where(a => a.remarks == Remarks.Absent && a.Student.StudentNo == studentNo).ToListAsync()).Count;
+            var onTime = (await _context.Attendances.Where(a => a.remarks == Remarks.OnTime && a.Student.StudentNo == studentNo).ToListAsync()).Count;
+
+            var count = new List<int> { onTime, late, cutting, absent };
+            return new CRUDReturn
+            { success = true, data = count };
+        }
+
+        public async Task<CRUDReturn> GetRemarksCount(int studentNo, DateTime date)
+        {
+            var late = (await _context.Attendances.Where(a => a.remarks == Remarks.Late && a.Student.StudentNo == studentNo && a.Date == date).ToListAsync()).Count;
+            var cutting = (await _context.Attendances.Where(a => a.remarks == Remarks.Cutting && a.Student.StudentNo == studentNo && a.Date == date).ToListAsync()).Count;
+            var absent = (await _context.Attendances.Where(a => a.remarks == Remarks.Absent && a.Student.StudentNo == studentNo && a.Date == date).ToListAsync()).Count;
+            var onTime = (await _context.Attendances.Where(a => a.remarks == Remarks.OnTime && a.Student.StudentNo == studentNo && a.Date == date).ToListAsync()).Count;
+
+            var count = new List<int> { onTime, late, cutting, absent };
+            return new CRUDReturn
+            { success = true, data = count };
+        }
         //GetAttendancesOverload
 
         public async Task<CRUDReturn> GetAttendances(DateTime date)
@@ -90,8 +126,15 @@ namespace Samids_API.Services.Impl
             var student = await _context.Students.Where(s => s.StudentNo == attendance.studentNo).SingleAsync();
             //Checks all rooms with schedule on the DayOfTheWeek - ex. Rooms of subjectschedule on Monday
             var schedRoom = await _context.SubjectSchedules.Where(s => s.Room == attendance.room && s.Day == attendance.date.DayOfWeek).ToListAsync();
+
+
             //Gets the closest scheduleId based on ActualTimein from Device
-            var sched = (from s in schedRoom let distance = Math.Abs(s.TimeStart.Subtract(attendance.actualTimeIn).Ticks) orderby distance select s).First();
+
+            
+            var sched = (from s in schedRoom let distance = Math.Abs(s.TimeStart.Subtract(attendance.actualTimeIn).Ticks) orderby distance select s).ToList();
+            
+            
+
 
             var device = await _context.Devices.SingleOrDefaultAsync(d => d.Room == attendance.room);
 
@@ -108,10 +151,10 @@ namespace Samids_API.Services.Impl
             }
 
             //Check Remarks goes here
-            var remarks = CheckRemarks(attendance.actualTimeIn, attendance.actualTimeout, sched);
+            var remarks = CheckRemarks(attendance.actualTimeIn, attendance.actualTimeout, sched[0]);
 
             //Then append to newAttendance
-            var newAttendance = new Attendance { Student = student, Date = attendance.date, Device = device, remarks = remarks, SubjectSchedule = sched, ActualTimeIn = attendance.actualTimeIn, ActualTimeOut = attendance.actualTimeout };
+            var newAttendance = new Attendance { Student = student, Date = attendance.date, Device = device, remarks = remarks, SubjectSchedule = sched[0], ActualTimeIn = attendance.actualTimeIn, ActualTimeOut = attendance.actualTimeout };
 
             _context.Attendances.Add(newAttendance);
             _context.SaveChanges();

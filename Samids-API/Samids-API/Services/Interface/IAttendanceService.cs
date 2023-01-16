@@ -5,8 +5,10 @@ namespace Samids_API.Services.Interface
 {
     public interface IAttendanceService
     {
+        Task<CRUDReturn> GetRemarksCount();
+        Task<CRUDReturn> GetRemarksCount(int studentNo);
+        Task<CRUDReturn> GetRemarksCount(int studentNo, DateTime Date);
         Task<CRUDReturn> GetAttendances();
-
         Task<CRUDReturn> GetAttendances(DateTime date);
         Task<CRUDReturn> GetAttendances(DateTime date, int studentNo);
 
