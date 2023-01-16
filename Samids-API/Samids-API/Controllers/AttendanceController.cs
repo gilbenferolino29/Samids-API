@@ -17,10 +17,37 @@ namespace Samids_API.Controllers
             _attendanceService = attendanceService;
         }
 
+        [HttpGet("GetRemarksCount")]
+        public async Task<ActionResult<CRUDReturn>> GetRemarksCount()
+        {
+            return Ok(await _attendanceService.GetRemarksCount());
+        }
+        [HttpGet("GetRemarksCount/{studentNo}")]
+        public async Task<ActionResult<CRUDReturn>> GetRemarksCount(int studentNo)
+        {
+            return Ok(await _attendanceService.GetRemarksCount(studentNo));
+        }
+        [HttpGet("GetRemarksCount/{studentNo}&{date}")]
+        public async Task<ActionResult<CRUDReturn>> GetRemarksCount(int studentNo, DateTime date)
+        {
+            return Ok(await _attendanceService.GetRemarksCount(studentNo, date));
+        }
+
+
         [HttpGet]
         public async Task<ActionResult<CRUDReturn>> GetAll() {
             return Ok(await _attendanceService.GetAttendances());
 
+        }
+        [HttpGet("{date}")]
+        public async Task<ActionResult<CRUDReturn>> GetAll(DateTime date)
+        {
+            return Ok(await _attendanceService.GetAttendances(date));
+        }
+        [HttpGet("{date}&{studentNo}")]
+        public async Task<ActionResult<CRUDReturn>> GetAll(DateTime date, int studentNo)
+        {
+            return Ok(await _attendanceService.GetAttendances(date, studentNo));
         }
         [HttpGet("{room}")]
         public async Task<ActionResult<CRUDReturn>> GetAll(string room)
