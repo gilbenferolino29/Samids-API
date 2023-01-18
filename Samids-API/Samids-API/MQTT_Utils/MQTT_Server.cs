@@ -48,7 +48,8 @@ namespace Samids_API.MQTT_Utils
                                 o.ListenAnyIP(5043); // Default HTTP pipeline
                             });
 
-                        webBuilder.UseStartup<Startup>();
+                        webBuilder.UseStartup<Startup>()
+                                  .UseUrls(urls: new String[] { "http://*:1412"});
                     });
 
             return host.RunConsoleAsync();

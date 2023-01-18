@@ -1,10 +1,10 @@
 global using Microsoft.EntityFrameworkCore;
 global using static Samids_API.Constants;
+using MQTTnet.Client;
 using Samids_API.Data;
 using Samids_API.MQTT_Utils;
 using Samids_API.Services.Impl;
 using Samids_API.Services.Interface;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +16,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+//builder.
 
 builder.Services.AddDbContext<SamidsDataContext>(options =>
 {
@@ -48,5 +49,8 @@ app.MapControllers();
 
 app.CreateDbIfNotExists();
 
-MQTT_Server.Start_MqttServer();
+//MQTT_Server.Start_MqttServer(); // MQTT Server broker // only uncomment if no other broker or no local network connected IoT
+await MQTT_Client.StartClient();
+
+Console.WriteLine("Running API");
 app.Run();
