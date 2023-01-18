@@ -21,6 +21,19 @@ namespace Samids_API.Controllers
         {
             return Ok(await _studentService.GetStudents());
         }
+
+        [HttpGet("ClassesByDay")]
+        public async Task<ActionResult<CRUDReturn>> GetStudentClasses([FromBody]DateOnly date, int studentNo)
+        {
+            return Ok(await _studentService.GetStudentClasses(date, studentNo));
+        }
+
+        [HttpGet("ClassesByDate")]
+        public async Task<ActionResult<CRUDReturn>> GetStudentClasses([FromBody]DateTime date, int studentNo)
+        {
+            return Ok(await _studentService.GetStudentClasses(date, studentNo));
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<CRUDReturn>> GetStudentById(int id)
         {

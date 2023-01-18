@@ -6,8 +6,8 @@ namespace Samids_API.Services.Interface
     public interface IStudentService
     {
         Task<CRUDReturn> GetStudents();
-        Task<CRUDReturn> GetStudentsClasses(DateTime date);
-        Task<CRUDReturn> GetStudentClasses(DateTime date);
+        Task<CRUDReturn> GetStudentClasses(DateTime date, int studentNo);
+        Task<CRUDReturn> GetStudentClasses(DateOnly date, int studentNo);
         Task<CRUDReturn> GetStudentById(int id);
         Task<CRUDReturn> AddStudentSubjects(AddStudentSubjectDto<int> request);
         Task<CRUDReturn> AddStudentSubjects(AddStudentSubjectDto<List<Subject>> request);
