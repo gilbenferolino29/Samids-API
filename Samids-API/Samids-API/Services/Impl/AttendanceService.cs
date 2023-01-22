@@ -145,7 +145,7 @@ namespace Samids_API.Services.Impl
             }
 
             //Checks if student really is a student on this room and have the subject given the schedule
-            if (await VerifyAttendance(student.Rfid, attendance.room) is not true)
+            if (await VerifyAttendance(student.Rfid, attendance.room))
             {
                 return new CRUDReturn { success=false, data= StudentNotAuthorized};
             }
