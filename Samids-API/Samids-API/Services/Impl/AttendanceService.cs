@@ -131,7 +131,7 @@ namespace Samids_API.Services.Impl
             //Gets the closest scheduleId based on ActualTimein from Device
 
             
-            var sched = (from s in schedRoom let distance = Math.Abs(s.TimeStart.Subtract(attendance.actualTimeIn).Ticks) orderby distance select s).ToList();
+            var sched = from s in schedRoom let distance = Math.Abs(s.TimeStart.Subtract(attendance.actualTimeIn).Ticks) orderby distance select s;
             
             
 
@@ -151,7 +151,7 @@ namespace Samids_API.Services.Impl
             }
 
             //Check Remarks goes here
-            var remarks = CheckRemarks(attendance.actualTimeIn, attendance.actualTimeout, sched[0]);
+            var remarks = CheckRemarks(attendance.actualTimeIn, attendance.actualTimeout, sched.FirstOrDefault());
 
             //Then append to newAttendance
             var newAttendance = new Attendance { Student = student, Date = attendance.date, Device = device, remarks = remarks, SubjectSchedule = sched[0], ActualTimeIn = attendance.actualTimeIn, ActualTimeOut = attendance.actualTimeout };
