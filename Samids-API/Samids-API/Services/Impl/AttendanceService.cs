@@ -123,7 +123,7 @@ namespace Samids_API.Services.Impl
 
         public async Task<CRUDReturn> AddStudentAttendance(AddAttendanceDto attendance)
         {
-            var student = await _context.Students.Where(s => s.StudentNo == attendance.studentNo).SingleAsync();
+            var student = await _context.Students.Where(s => s.StudentNo == attendance.studentNo).Include(s=>s.Subjects).ThenInclude(s=>s.SubjectSchedules).SingleAsync();
             //Checks all rooms with schedule on the DayOfTheWeek - ex. Rooms of subjectschedule on Monday
             var schedRoom = await _context.SubjectSchedules.Where(s => s.Room == attendance.room && s.Day == attendance.date.DayOfWeek).ToListAsync();
 

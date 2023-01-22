@@ -87,13 +87,6 @@ namespace Samids_API.Controllers
             return Ok(await _attendanceService.GetAttendances(room, studentNo, remarks));
 
         }
-
-
-
-
-
-
-
         [HttpGet]
         [Route("GetAllSA")]
         public async Task<ActionResult<CRUDReturn>> GetAllSA(int studentId)
