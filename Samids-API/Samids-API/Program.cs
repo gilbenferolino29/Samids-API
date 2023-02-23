@@ -16,6 +16,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
 //builder.
 
 builder.Services.AddDbContext<SamidsDataContext>(options =>
@@ -30,6 +32,10 @@ builder.Services.AddScoped<IFacultyService, FacultyService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IConfigService, ConfigService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+// For the Mqtt Client
+builder.Services.AddMqttClientHostedService();
+
 var app = builder.Build();
 //var server = MQTT_Server.CreateHostBuilder(args).Build();
 
@@ -50,7 +56,7 @@ app.MapControllers();
 app.CreateDbIfNotExists();
 
 //MQTT_Server.Start_MqttServer(); // MQTT Server broker // only uncomment if no other broker or no local network connected IoT
-await MQTT_Client.StartClient();
+//await MQTT_Client.StartClient();
 
 Console.WriteLine("Running API");
 app.Run();
