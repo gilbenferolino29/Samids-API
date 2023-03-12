@@ -30,6 +30,7 @@ builder.Services.AddScoped<IFacultyService, FacultyService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IConfigService, ConfigService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICSVService, CSVService>();
 var app = builder.Build();
 //var server = MQTT_Server.CreateHostBuilder(args).Build();
 
