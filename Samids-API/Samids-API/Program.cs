@@ -51,7 +51,7 @@ app.MapControllers();
 app.CreateDbIfNotExists();
 
 //MQTT_Server.Start_MqttServer(); // MQTT Server broker // only uncomment if no other broker or no local network connected IoT
-await MQTT_Client.StartClient();
+//await MQTT_Client.StartClient();
 
 Console.WriteLine("Running API");
 app.Run();
