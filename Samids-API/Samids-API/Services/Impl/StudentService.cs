@@ -8,10 +8,12 @@ namespace Samids_API.Services.Impl
     public class StudentService : IStudentService
     {
         private readonly SamidsDataContext _context;
+        private static readonly SamidsDataContext _context_const;
+
 
         public StudentService(SamidsDataContext context)
         {
-            _context = context;
+            _context = context;         
         }
         public async Task<CRUDReturn> AddStudent(Student student)
         {
@@ -20,6 +22,21 @@ namespace Samids_API.Services.Impl
             return new CRUDReturn 
             { success = true, data = await _context.Students.AsNoTracking().ToListAsync() }; 
         }
+
+        // This is for the MQTT Client only
+        //public static async Task<CRUDReturn> CheckRFID(long id)
+        //{
+        //    var student = await _context.Students.FirstOrDefaultAsync(s => s.Rfid == id);
+
+        //    if (student is null)
+        //    {
+        //        return new CRUDReturn
+        //        { success = false, data = StudentNotFound };
+        //    }
+
+        //    return new CRUDReturn
+        //    { success = true, data = student };
+        //}
 
         public async Task<CRUDReturn> AddStudentSubjects(AddStudentSubjectDto<int> request)
         {
@@ -130,6 +147,21 @@ namespace Samids_API.Services.Impl
             }
 
             return new CRUDReturn 
+            { success = true, data = student };
+
+        }
+
+        public async Task<CRUDReturn> GetStudentByRfid(long id)
+        {
+            var student = await _context.Students.FirstOrDefaultAsync(s => s.Rfid == id);
+
+            if (student is null)
+            {
+                return new CRUDReturn
+                { success = false, data = StudentNotFound };
+            }
+
+            return new CRUDReturn
             { success = true, data = student };
 
         }

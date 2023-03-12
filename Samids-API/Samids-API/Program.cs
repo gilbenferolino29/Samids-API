@@ -16,6 +16,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
 //builder.
 
 builder.Services.AddDbContext<SamidsDataContext>(options =>
@@ -31,6 +33,10 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IConfigService, ConfigService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICSVService, CSVService>();
+
+// For the Mqtt Client
+builder.Services.AddMqttClientHostedService();
+
 var app = builder.Build();
 //var server = MQTT_Server.CreateHostBuilder(args).Build();
 

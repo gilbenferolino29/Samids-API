@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Dynamic;
 
 namespace Samids_API.Models
 {
-    public class Student
+    public class Student: DynamicObject
     {
         public int StudentID { get; set; }
         [Required]

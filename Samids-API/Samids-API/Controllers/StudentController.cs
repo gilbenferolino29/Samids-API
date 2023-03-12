@@ -34,10 +34,16 @@ namespace Samids_API.Controllers
             return Ok(await _studentService.GetStudentClasses(date, studentNo));
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("ById/{id}")]
         public async Task<ActionResult<CRUDReturn>> GetStudentById(int id)
         {
             return Ok(await _studentService.GetStudentById(id));
+        }
+
+        [HttpGet("ByRfid/{rfid}")]
+        public async Task<ActionResult<CRUDReturn>> GetStudentByRfid(long rfid)
+        {
+            return Ok(await _studentService.GetStudentByRfid(rfid));
         }
 
         [HttpPost]

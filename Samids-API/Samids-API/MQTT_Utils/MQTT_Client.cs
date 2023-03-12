@@ -9,18 +9,17 @@ using MQTTnet.Client;
 using MQTTnet.Packets;
 using MQTTnet.Protocol;
 
-
 using Samids_API.Models;
-
-
+using Microsoft.Extensions.Configuration;
+using MQTTnet.AspNetCore;
 
 namespace Samids_API.MQTT_Utils
 {
-    static class MQTT_Client
+    public static class MQTT_Client
     {
         private static readonly string clientId = "API_CLIENT";
-        private static readonly string pubTopic = $"mqtt/RFID/{clientId}";
-        private static readonly string subTopic = "mqtt/RFID/test";
+        private static readonly string pubTopic = $"mqtt/API/{clientId}";
+        private static readonly string subTopic = "mqtt/RFID/+";
 
 
         public static async Task StartClient()
@@ -41,7 +40,7 @@ namespace Samids_API.MQTT_Utils
                 //MqttClientConnectResult response;
                 var mqttClientOptions = new MqttClientOptionsBuilder()
                                             .WithTcpServer(broker?.HiveTest?.Url, broker?.HiveTest?.Port)
-                                            .WithClientId(clientId)                                                  
+                                            .WithClientId(clientId)
                                             .WithCredentials(broker?.HiveTest?.Uname, broker?.HiveTest?.Pass)
                                             .WithKeepAlivePeriod(TimeSpan.FromSeconds(60))
                                             .WithTls(
@@ -61,7 +60,7 @@ namespace Samids_API.MQTT_Utils
 
                 // In MQTTv5 the response contains much more information.
                 var timeout = new CancellationTokenSource(5000);
-                
+
                 _ = Task.Run(
                 async () =>
                 {
@@ -81,8 +80,32 @@ namespace Samids_API.MQTT_Utils
                                 // received messages get lost.
                                 mqttClient.ApplicationMessageReceivedAsync += e =>
                                 {
-                                    Console.WriteLine("Received application message.");
-                                    e.DumpToConsole();
+                                    String[] tokens = e.ApplicationMessage.Topic.Split('/');
+                                    String tokClientID = tokens.Last();
+
+                                    Console.WriteLine($"Received application message.");
+                                    //e.DumpToConsole();
+                                    var payload = e.ApplicationMessage?.Payload == null ? null : Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
+
+                                    Console.WriteLine(
+                                    $"===================================================\n" +
+                                    $"-- TimeStamp: {DateTime.Now} -- \n" +
+                                    $"ClientID: {tokClientID}, \n" +
+                                    $"Topic = {e.ApplicationMessage?.Topic}, \n" +
+                                    $"Payload = {payload}, \n" +
+                                    $"QoS = {e.ApplicationMessage?.QualityOfServiceLevel}, \n" +
+                                    $"Retain-Flag = {e.ApplicationMessage?.Retain}\n"
+                                    );
+
+                                    RFID? json = JsonSerializer.Deserialize<RFID>(payload);
+
+                                    Console.WriteLine(json._Id);
+
+                                    //Student? respStudent = GetStudentByRfid()
+
+                                    //payload.DumpToConsole();
+
+                                    // publish method here
 
                                     return Task.CompletedTask;
                                 };
@@ -115,13 +138,14 @@ namespace Samids_API.MQTT_Utils
                             Console.WriteLine(e);
                             break;
                         }
-                        finally {
+                        finally
+                        {
                             Console.WriteLine("Pinging server every 3 seconds if disconnected...");
                             // Check the connection state every 3 seconds and perform a reconnect if required.
                             await Task.Delay(TimeSpan.FromSeconds(3));
                         }
                     }
-                    
+
                 });
 
                 Console.WriteLine("The MQTT client is disconnected.");
@@ -133,7 +157,10 @@ namespace Samids_API.MQTT_Utils
                 await mqttClient.DisconnectAsync(mqttClientDisconnectOptions, CancellationToken.None);
             }
         }
+
     }
+
+    
 
 
 }
