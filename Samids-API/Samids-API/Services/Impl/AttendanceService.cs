@@ -132,8 +132,8 @@ namespace Samids_API.Services.Impl
 
             
             var sched = from s in schedRoom let distance = Math.Abs(s.TimeStart.Subtract(attendance.actualTimeIn).Ticks) orderby distance select s;
-            
-            
+
+            Console.WriteLine(sched);
 
 
             var device = await _context.Devices.SingleOrDefaultAsync(d => d.Room == attendance.room);
@@ -147,14 +147,14 @@ namespace Samids_API.Services.Impl
             //Checks if student really is a student on this room and have the subject given the schedule
             if (await VerifyAttendance(student.Rfid, attendance.room))
             {
-                return new CRUDReturn { success=false, data= StudentNotAuthorized};
+                return new CRUDReturn { success=false, data = StudentNotAuthorized};
             }
 
             //Check Remarks goes here
             var remarks = CheckRemarks(attendance.actualTimeIn, attendance.actualTimeout, sched.FirstOrDefault());
 
             //Then append to newAttendance
-            var newAttendance = new Attendance { Student = student, Date = attendance.date, Device = device, remarks = remarks, SubjectSchedule = sched[0], ActualTimeIn = attendance.actualTimeIn, ActualTimeOut = attendance.actualTimeout };
+            var newAttendance = new Attendance { Student = student, Date = attendance.date, Device = device, remarks = remarks, SubjectSchedule = sched.ElementAt(0), ActualTimeIn = attendance.actualTimeIn, ActualTimeOut = attendance.actualTimeout };
 
             _context.Attendances.Add(newAttendance);
             _context.SaveChanges();
@@ -167,7 +167,7 @@ namespace Samids_API.Services.Impl
 
             var late = sched.TimeStart.AddMinutes(_lateConfig);
             var absent = sched.TimeStart.AddMinutes(_absentConfig);
-            var cutting = sched.TimeEnd.AddMinutes(-5);
+            var cutting = sched.TimeEnd.AddMinutes(-30);
             if (timeOut.TimeOfDay < cutting.TimeOfDay)
             {
                 return Remarks.Cutting;
